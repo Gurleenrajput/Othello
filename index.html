@@ -1,92 +1,215 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Othello / Reversi</title>
+/* ======================
+   GLOBAL STYLES
+====================== */
 
-  <!-- Font Awesome Icons -->
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+* {
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
 
-  <!-- Google Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+body,
+.app,
+.board,
+.cell,
+button,
+select {
+  caret-color: transparent;
+  user-select: none;
+}
 
-  <!-- Main CSS -->
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
+.cell:focus,
+button:focus,
+select:focus {
+  outline: none;
+}
 
-<div class="app">
+body {
+  margin: 0;
+  background: linear-gradient(135deg, #1e293b, #020617);
+  color: #f8fafc;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-  <!-- START MENU -->
-  <div id="menu" class="screen menu active">
-    <h1>Othello / Reversi</h1>
+.app {
+  width: 100%;
+  max-width: 900px;
+  background: #020617;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
 
-    <div class="controls">
-      <select id="modeSelect">
-        <option value="pvp">Player vs Player</option>
-        <option value="ai">Player vs Computer</option>
-      </select>
+h1,h2,h3 {
+  margin: 0 0 16px;
+  text-align: center;
+}
 
-      <select id="difficultySelect">
-        <option value="easy">Easy</option>
-        <option value="medium">Medium</option>
-        <option value="hard">Hard</option>
-      </select>
+button {
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  background: #2563eb;
+  color: white;
+  font-weight: 600;
+  transition: all .2s;
+}
 
-      <button id="startBtn">Start Game</button>
-    </div>
-  </div>
+button:hover {
+  background: #1d4ed8;
+}
 
-  <!-- GAME SCREEN -->
-  <div id="game" class="screen">
+button.secondary {
+  background: #334155;
+}
 
-    <h2>Othello</h2>
+button.secondary:hover {
+  background: #475569;
+}
 
-    <div class="game-ui">
+select {
+  padding: 8px;
+  border-radius: 6px;
+  background: #020617;
+  color: white;
+  border: 1px solid #334155;
+}
 
-      <div class="board" id="board"></div>
+/* ======================
+   SCREENS
+====================== */
 
-      <div class="sidebar">
+.screen {
+  display: none;
+}
 
-        <div class="info">
-          <strong>Turn:</strong>
-          <span id="turnText"></span>
-        </div>
+.screen.active {
+  display: block;
+}
 
-        <div class="info">
-          ⚫ Black: <span id="blackScore">2</span><br>
-          ⚪ White: <span id="whiteScore">2</span>
-        </div>
+.menu {
+  text-align: center;
+}
 
-        <div class="info">
-          <button id="restartBtn" class="secondary">Restart</button>
-        </div>
+.menu .controls {
+  display: grid;
+  gap: 16px;
+  max-width: 300px;
+  margin: auto;
+}
 
-        <div class="info">
-          <button id="backBtn" class="secondary">Main Menu</button>
-        </div>
+/* ======================
+   GAME UI
+====================== */
 
-      </div>
+.game-ui {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 24px;
+}
 
-    </div>
-  </div>
+@media(max-width:768px){
+  .game-ui{
+    grid-template-columns:1fr;
+  }
+}
 
-  <!-- END SCREEN -->
-  <div id="end" class="screen end-screen">
-    <h2>Game Over</h2>
+.sidebar {
+  border: 1px solid #1e293b;
+  border-radius: 12px;
+  padding: 16px;
+}
 
-    <h3 id="winnerText"></h3>
-    <p id="finalScore"></p>
+.info {
+  margin-bottom: 12px;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #1e293b;
+}
 
-    <button id="newGameBtn">New Game</button>
-  </div>
+/* ======================
+   BOARD
+====================== */
 
-</div>
+.board {
+  aspect-ratio: 1;
+  display: grid;
+  grid-template-columns: repeat(8,1fr);
+  grid-template-rows: repeat(8,1fr);
+  background: #065f46;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 4px solid #064e3b;
+}
 
-<!-- Main JavaScript -->
-<script src="script.js"></script>
+.cell {
+  border: 1px solid rgba(255,255,255,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
 
-</body>
-</html>
+.cell.valid::after {
+  content: '';
+  width: 30%;
+  height: 30%;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.4);
+}
+
+/* ======================
+   DISCS
+====================== */
+
+.disc {
+  width: 80%;
+  height: 80%;
+  border-radius: 50%;
+  transition: transform .3s;
+}
+
+.black {
+  background: radial-gradient(circle at 30% 30%, #444, #000);
+}
+
+.white {
+  background: radial-gradient(circle at 30% 30%, #fff, #cbd5e1);
+}
+
+/* ======================
+   END SCREEN
+====================== */
+
+.end-screen {
+  text-align: center;
+}
+/* Social Footer */
+
+.social-footer {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.social-footer a {
+  font-size: 22px;
+  color: #60a5fa;
+  transition: 0.3s;
+}
+
+.social-footer a:hover {
+  color: #93c5fd;
+  transform: scale(1.1);
+}
+
+.copyright {
+  margin-top: 8px;
+  font-size: 13px;
+  text-align: center;
+  color: #cbd5e1;
+}
