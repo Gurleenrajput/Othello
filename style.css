@@ -187,3 +187,29 @@ select {
 .end-screen {
   text-align: center;
 }
+/* Social Footer */
+
+.social-footer {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.social-footer a {
+  font-size: 22px;
+  color: #60a5fa;
+  transition: 0.3s;
+}
+
+.social-footer a:hover {
+  color: #93c5fd;
+  transform: scale(1.1);
+}
+
+.copyright {
+  margin-top: 8px;
+  font-size: 13px;
+  text-align: center;
+  color: #cbd5e1;
+}
