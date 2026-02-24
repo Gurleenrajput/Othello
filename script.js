@@ -1,101 +1,277 @@
-const menu=document.getElementById("menu");
-const game=document.getElementById("game");
+/* ======================
+   GAME CONSTANTS
+====================== */
 
-const startBtn=document.getElementById("startBtn");
-const backBtn=document.getElementById("backBtn");
+const SIZE = 8;
+const EMPTY = 0;
+const BLACK = 1;
+const WHITE = -1;
 
-const board=document.getElementById("board");
-const turnTxt=document.getElementById("turn");
+const DIRECTIONS = [
+  [1,0],[-1,0],[0,1],[0,-1],
+  [1,1],[1,-1],[-1,1],[-1,-1]
+];
 
-const howBtn=document.getElementById("howBtn");
-const modal=document.getElementById("modal");
-const closeBtn=document.getElementById("closeBtn");
+/* ======================
+   STATE
+====================== */
 
-const themeBtn=document.getElementById("themeBtn");
+let board = [];
+let currentPlayer = BLACK;
+let mode = 'pvp';
+let difficulty = 'easy';
+let gameOver = false;
 
-/* Theme */
-themeBtn.onclick=()=>{
+/* ======================
+   DOM
+====================== */
 
-  if(document.body.classList.contains("light")){
-    document.body.className="dark";
-    themeBtn.textContent="🌙 Dark";
-  }else{
-    document.body.className="light";
-    themeBtn.textContent="🌞 Light";
-  }
+const menuScreen = document.getElementById('menu');
+const gameScreen = document.getElementById('game');
+const endScreen = document.getElementById('end');
+
+const boardEl = document.getElementById('board');
+const turnText = document.getElementById('turnText');
+const blackScoreEl = document.getElementById('blackScore');
+const whiteScoreEl = document.getElementById('whiteScore');
+
+const winnerText = document.getElementById('winnerText');
+const finalScore = document.getElementById('finalScore');
+
+/* ======================
+   UI HANDLERS
+====================== */
+
+startBtn.onclick = () => {
+  mode = modeSelect.value;
+  difficulty = difficultySelect.value;
+  startGame();
 };
 
-/* Modal */
-howBtn.onclick=()=>modal.classList.add("show");
-closeBtn.onclick=()=>modal.classList.remove("show");
+restartBtn.onclick = startGame;
+backBtn.onclick = () => showScreen(menuScreen);
+newGameBtn.onclick = () => showScreen(menuScreen);
 
-/* Screens */
-startBtn.onclick=()=>{
-  show(game);
-  init();
+modeSelect.onchange = () => {
+  difficultySelect.style.display =
+    modeSelect.value === 'ai' ? 'block' : 'none';
 };
 
-backBtn.onclick=()=>show(menu);
+/* ======================
+   SCREEN CONTROL
+====================== */
 
-function show(s){
-  [menu,game].forEach(x=>x.classList.remove("active"));
-  s.classList.add("active");
+function showScreen(screen) {
+  [menuScreen, gameScreen, endScreen]
+    .forEach(s => s.classList.remove('active'));
+  screen.classList.add('active');
 }
 
-/* Game */
-let turn=1;
-let data=[];
+/* ======================
+   INIT
+====================== */
 
-function init(){
+function startGame() {
 
-  data=Array.from({length:8},
-    ()=>Array(8).fill(0));
+  initBoard();
+  renderBoard();
+  updateUI();
 
-  data[3][3]=-1;
-  data[3][4]=1;
-  data[4][3]=1;
-  data[4][4]=-1;
+  gameOver = false;
+  currentPlayer = BLACK;
 
-  draw();
+  showScreen(gameScreen);
 }
 
-function draw(){
+function initBoard() {
+  board = Array.from({length: SIZE},
+    () => Array(SIZE).fill(EMPTY));
 
-  board.innerHTML=\"\";
+  board[3][3] = WHITE;
+  board[3][4] = BLACK;
+  board[4][3] = BLACK;
+  board[4][4] = WHITE;
+}
 
-  for(let r=0;r<8;r++){
-    for(let c=0;c<8;c++){
+/* ======================
+   GAME LOGIC
+====================== */
 
-      const cell=document.createElement(\"div\");
-      cell.className=\"cell\";
+function isValidMove(r,c,player,brd=board) {
 
-      if(data[r][c]==1){
-        const d=document.createElement(\"div\");
-        d.className=\"black\";
-        cell.appendChild(d);
-      }
+  if (brd[r][c] !== EMPTY) return false;
 
-      if(data[r][c]==-1){
-        const d=document.createElement(\"div\");
-        d.className=\"white\";
-        cell.appendChild(d);
-      }
+  for (let [dx,dy] of DIRECTIONS) {
 
-      cell.onclick=()=>play(r,c);
+    let x = r + dx;
+    let y = c + dy;
+    let foundOpponent = false;
 
-      board.appendChild(cell);
+    while (inBounds(x,y) && brd[x][y] === -player) {
+      foundOpponent = true;
+      x += dx;
+      y += dy;
+    }
+
+    if (foundOpponent && inBounds(x,y)
+      && brd[x][y] === player) {
+      return true;
     }
   }
 
-  turnTxt.textContent=turn==1?\"Black\":\"White\";
+  return false;
 }
 
-function play(r,c){
+function getValidMoves(player, brd=board) {
+  const moves = [];
 
-  if(data[r][c]!=0) return;
+  for (let r=0;r<SIZE;r++) {
+    for (let c=0;c<SIZE;c++) {
+      if (isValidMove(r,c,player,brd)) {
+        moves.push([r,c]);
+      }
+    }
+  }
 
-  data[r][c]=turn;
-  turn*=-1;
+  return moves;
+}
 
-  draw();
+function makeMove(r,c,player) {
+
+  board[r][c] = player;
+
+  for (let [dx,dy] of DIRECTIONS) {
+
+    let x = r + dx;
+    let y = c + dy;
+    let line = [];
+
+    while (inBounds(x,y) && board[x][y] === -player) {
+      line.push([x,y]);
+      x += dx;
+      y += dy;
+    }
+
+    if (line.length && inBounds(x,y)
+      && board[x][y] === player) {
+
+      for (let [fx,fy] of line) {
+        board[fx][fy] = player;
+      }
+    }
+  }
+}
+
+function inBounds(r,c) {
+  return r>=0 && r<SIZE && c>=0 && c<SIZE;
+}
+
+function switchPlayer() {
+
+  currentPlayer *= -1;
+
+  if (getValidMoves(currentPlayer).length === 0) {
+    currentPlayer *= -1;
+
+    if (getValidMoves(currentPlayer).length === 0) {
+      endGame();
+      return;
+    }
+  }
+
+  updateUI();
+}
+
+function countScore() {
+
+  let black=0, white=0;
+
+  board.flat().forEach(v => {
+    if (v===BLACK) black++;
+    if (v===WHITE) white++;
+  });
+
+  return {black,white};
+}
+
+/* ======================
+   RENDERING
+====================== */
+
+function renderBoard() {
+
+  boardEl.innerHTML = '';
+
+  const validMoves = getValidMoves(currentPlayer);
+
+  for (let r=0;r<SIZE;r++) {
+    for (let c=0;c<SIZE;c++) {
+
+      const cell = document.createElement('div');
+      cell.className = 'cell';
+
+      if (validMoves.some(m=>m[0]===r&&m[1]===c)) {
+        cell.classList.add('valid');
+      }
+
+      const v = board[r][c];
+
+      if (v !== EMPTY) {
+        const disc = document.createElement('div');
+        disc.className = 'disc ' + (v===BLACK?'black':'white');
+        cell.appendChild(disc);
+      }
+
+      cell.onclick = () => playMove(r,c);
+
+      boardEl.appendChild(cell);
+    }
+  }
+}
+
+function playMove(r,c) {
+
+  if (gameOver) return;
+
+  if (!isValidMove(r,c,currentPlayer)) return;
+
+  makeMove(r,c,currentPlayer);
+
+  renderBoard();
+  updateUI();
+
+  switchPlayer();
+}
+
+function updateUI() {
+
+  const {black,white} = countScore();
+
+  blackScoreEl.textContent = black;
+  whiteScoreEl.textContent = white;
+
+  turnText.textContent =
+    currentPlayer===BLACK ? 'Black ⚫' : 'White ⚪';
+
+  renderBoard();
+}
+
+/* ======================
+   END GAME
+====================== */
+
+function endGame() {
+
+  gameOver = true;
+
+  const {black,white} = countScore();
+
+  if (black > white) winnerText.textContent = 'Black Wins!';
+  else if (white > black) winnerText.textContent = 'White Wins!';
+  else winnerText.textContent = 'Draw!';
+
+  finalScore.textContent =
+    `Black: ${black} | White: ${white}`;
+
+  showScreen(endScreen);
 }
