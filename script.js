@@ -1,66 +1,71 @@
-const SIZE = 8;
-const EMPTY = 0;
-const BLACK = 1;
-const WHITE = -1;
+const SIZE=8;
+const EMPTY=0;
+const BLACK=1;
+const WHITE=-1;
 
-const DIR = [
-  [1,0],[-1,0],[0,1],[0,-1],
-  [1,1],[1,-1],[-1,1],[-1,-1]
+const DIR=[
+[1,0],[-1,0],[0,1],[0,-1],
+[1,1],[1,-1],[-1,1],[-1,-1]
 ];
 
-let board = [];
-let current = BLACK;
-let gameOver = false;
+let board=[];
+let turn=BLACK;
+let gameOver=false;
 
 /* DOM */
-const menu = document.getElementById("menu");
-const game = document.getElementById("game");
-const end = document.getElementById("end");
+const menu=document.getElementById("menu");
+const game=document.getElementById("game");
+const end=document.getElementById("end");
 
-const boardEl = document.getElementById("board");
+const boardEl=document.getElementById("board");
 
-const turnText = document.getElementById("turnText");
-const blackScore = document.getElementById("blackScore");
-const whiteScore = document.getElementById("whiteScore");
+const turnTxt=document.getElementById("turn");
+const blackTxt=document.getElementById("black");
+const whiteTxt=document.getElementById("white");
 
-const winnerText = document.getElementById("winnerText");
-const finalScore = document.getElementById("finalScore");
+const winnerTxt=document.getElementById("winner");
+const scoreTxt=document.getElementById("score");
 
 /* Buttons */
-startBtn.onclick = startGame;
-restartBtn.onclick = startGame;
-backBtn.onclick = ()=>show(menu);
-newGameBtn.onclick = ()=>show(menu);
+const startBtn=document.getElementById("startBtn");
+const restartBtn=document.getElementById("restart");
+const backBtn=document.getElementById("back");
+const newBtn=document.getElementById("new");
 
-/* How To Play */
-howToPlayBtn.onclick = ()=>{
-  howToPlayModal.classList.add("show");
-};
+const howBtn=document.getElementById("howBtn");
+const modal=document.getElementById("modal");
+const closeBtn=document.getElementById("closeBtn");
 
-closeHowToPlay.onclick = ()=>{
-  howToPlayModal.classList.remove("show");
-};
+const themeBtn=document.getElementById("themeBtn");
 
 /* Theme */
-const themeBtn = document.getElementById("themeToggle");
-
 if(localStorage.theme==="light"){
   document.body.className="light";
-  themeBtn.textContent="🌞 Light Mode";
+  themeBtn.textContent="🌞 Light";
 }
 
 themeBtn.onclick=()=>{
 
   if(document.body.classList.contains("light")){
     document.body.className="dark";
-    themeBtn.textContent="🌙 Dark Mode";
+    themeBtn.textContent="🌙 Dark";
     localStorage.theme="dark";
   }else{
     document.body.className="light";
-    themeBtn.textContent="🌞 Light Mode";
+    themeBtn.textContent="🌞 Light";
     localStorage.theme="light";
   }
 };
+
+/* Modal */
+howBtn.onclick=()=>modal.classList.add("show");
+closeBtn.onclick=()=>modal.classList.remove("show");
+
+/* Buttons */
+startBtn.onclick=startGame;
+restartBtn.onclick=startGame;
+backBtn.onclick=()=>show(menu);
+newBtn.onclick=()=>show(menu);
 
 /* Screens */
 function show(s){
@@ -72,7 +77,7 @@ function show(s){
 function startGame(){
 
   initBoard();
-  current = BLACK;
+  turn=BLACK;
   gameOver=false;
 
   draw();
@@ -83,8 +88,8 @@ function startGame(){
 
 function initBoard(){
 
-  board = Array.from({length:8},
-    ()=>Array(8).fill(0));
+  board=Array.from({length:8},
+  ()=>Array(8).fill(0));
 
   board[3][3]=WHITE;
   board[3][4]=BLACK;
@@ -93,7 +98,7 @@ function initBoard(){
 }
 
 /* Logic */
-function inBounds(r,c){
+function inside(r,c){
   return r>=0&&r<8&&c>=0&&c<8;
 }
 
@@ -104,14 +109,13 @@ function valid(r,c,p){
   for(let [dx,dy] of DIR){
 
     let x=r+dx,y=c+dy;
-    let found=false;
+    let f=false;
 
-    while(inBounds(x,y)&&board[x][y]===-p){
-      found=true;
-      x+=dx;y+=dy;
+    while(inside(x,y)&&board[x][y]===-p){
+      f=true;x+=dx;y+=dy;
     }
 
-    if(found&&inBounds(x,y)&&board[x][y]===p)
+    if(f&&inside(x,y)&&board[x][y]===p)
       return true;
   }
 
@@ -138,27 +142,27 @@ function place(r,c,p){
     let x=r+dx,y=c+dy;
     let line=[];
 
-    while(inBounds(x,y)&&board[x][y]===-p){
+    while(inside(x,y)&&board[x][y]===-p){
       line.push([x,y]);
       x+=dx;y+=dy;
     }
 
-    if(line.length&&inBounds(x,y)&&board[x][y]===p){
+    if(line.length&&inside(x,y)&&board[x][y]===p){
       for(let [a,b] of line)
         board[a][b]=p;
     }
   }
 }
 
-function switchTurn(){
+function swap(){
 
-  current*=-1;
+  turn*=-1;
 
-  if(!moves(current).length){
-    current*=-1;
+  if(!moves(turn).length){
+    turn*=-1;
 
-    if(!moves(current).length){
-      endGame();
+    if(!moves(turn).length){
+      finish();
       return;
     }
   }
@@ -171,7 +175,7 @@ function draw(){
 
   boardEl.innerHTML=\"\";
 
-  const v=moves(current);
+  const v=moves(turn);
 
   for(let r=0;r<8;r++){
     for(let c=0;c<8;c++){
@@ -199,13 +203,13 @@ function draw(){
 function play(r,c){
 
   if(gameOver) return;
-  if(!valid(r,c,current)) return;
+  if(!valid(r,c,turn)) return;
 
-  place(r,c,current);
+  place(r,c,turn);
 
   draw();
   update();
-  switchTurn();
+  swap();
 }
 
 function update(){
@@ -217,17 +221,17 @@ function update(){
     if(v==-1)w++;
   });
 
-  blackScore.textContent=b;
-  whiteScore.textContent=w;
+  blackTxt.textContent=b;
+  whiteTxt.textContent=w;
 
-  turnText.textContent =
-    current==1?\"Black ⚫\":\"White ⚪\";
+  turnTxt.textContent=
+    turn==1?\"Black ⚫\":\"White ⚪\";
 
   draw();
 }
 
 /* End */
-function endGame(){
+function finish(){
 
   gameOver=true;
 
@@ -238,11 +242,11 @@ function endGame(){
     if(v==-1)w++;
   });
 
-  if(b>w) winnerText.textContent=\"Black Wins!\";
-  else if(w>b) winnerText.textContent=\"White Wins!\";
-  else winnerText.textContent=\"Draw!\";
+  if(b>w) winnerTxt.textContent=\"Black Wins!\";
+  else if(w>b) winnerTxt.textContent=\"White Wins!\";
+  else winnerTxt.textContent=\"Draw!\";
 
-  finalScore.textContent=`Black: ${b} | White: ${w}`;
+  scoreTxt.textContent=`Black: ${b} | White: ${w}`;
 
   show(end);
 }
