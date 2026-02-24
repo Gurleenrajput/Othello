@@ -1,189 +1,188 @@
-/* ======================
-   GLOBAL STYLES
-====================== */
-
+/* Reset */
 * {
   box-sizing: border-box;
   font-family: 'Inter', sans-serif;
 }
 
-body,
-.app,
-.board,
-.cell,
-button,
-select {
+/* Disable cursor */
+body,button,select,.cell {
   caret-color: transparent;
   user-select: none;
 }
 
-.cell:focus,
-button:focus,
-select:focus {
-  outline: none;
-}
-
 body {
   margin: 0;
-  background: linear-gradient(135deg, #1e293b, #020617);
-  color: #f8fafc;
   min-height: 100vh;
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  animation: bg 15s infinite;
+  background-size: 400% 400%;
+}
+
+/* Gradient */
+@keyframes bg {
+  0% {background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
+}
+
+body.dark {
+  background: linear-gradient(-45deg,#020617,#1e293b,#020617,#0f172a);
+  color: white;
+}
+
+body.light {
+  background: linear-gradient(-45deg,#e0f2fe,#f8fafc,#bae6fd,#f1f5f9);
+  color: black;
 }
 
 .app {
-  width: 100%;
-  max-width: 900px;
   background: #020617;
-  border-radius: 16px;
   padding: 24px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+  border-radius: 16px;
+  max-width: 900px;
+  width: 100%;
 }
 
-h1,h2,h3 {
-  margin: 0 0 16px;
-  text-align: center;
+body.light .app {
+  background: white;
 }
 
+/* Buttons */
 button {
-  cursor: pointer;
+  padding: 10px 16px;
   border: none;
   border-radius: 8px;
-  padding: 10px 16px;
+  cursor: pointer;
   background: #2563eb;
   color: white;
-  font-weight: 600;
-  transition: all .2s;
-}
-
-button:hover {
-  background: #1d4ed8;
 }
 
 button.secondary {
-  background: #334155;
-}
-
-button.secondary:hover {
   background: #475569;
 }
 
-select {
-  padding: 8px;
-  border-radius: 6px;
-  background: #020617;
-  color: white;
-  border: 1px solid #334155;
-}
-
-/* ======================
-   SCREENS
-====================== */
-
-.screen {
-  display: none;
-}
-
-.screen.active {
+.theme-btn {
   display: block;
+  margin: 10px auto;
 }
+
+/* Screens */
+.screen { display: none; }
+.screen.active { display: block; }
 
 .menu {
   text-align: center;
 }
 
-.menu .controls {
+.controls {
   display: grid;
-  gap: 16px;
+  gap: 12px;
   max-width: 300px;
   margin: auto;
 }
 
-/* ======================
-   GAME UI
-====================== */
-
+/* Game */
 .game-ui {
   display: grid;
   grid-template-columns: 1fr 300px;
-  gap: 24px;
+  gap: 20px;
 }
 
 @media(max-width:768px){
-  .game-ui{
-    grid-template-columns:1fr;
-  }
+  .game-ui{grid-template-columns:1fr;}
 }
 
 .sidebar {
   border: 1px solid #1e293b;
-  border-radius: 12px;
-  padding: 16px;
+  padding: 12px;
+  border-radius: 10px;
 }
 
 .info {
-  margin-bottom: 12px;
-  padding: 8px;
-  border-radius: 6px;
-  border: 1px solid #1e293b;
+  margin-bottom: 10px;
 }
 
-/* ======================
-   BOARD
-====================== */
-
+/* Board */
 .board {
-  aspect-ratio: 1;
-  display: grid;
-  grid-template-columns: repeat(8,1fr);
-  grid-template-rows: repeat(8,1fr);
-  background: #065f46;
-  border-radius: 12px;
-  overflow: hidden;
-  border: 4px solid #064e3b;
+  aspect-ratio:1;
+  display:grid;
+  grid-template-columns:repeat(8,1fr);
+  background:#065f46;
+  border:4px solid #064e3b;
 }
 
 .cell {
-  border: 1px solid rgba(255,255,255,0.1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
+  border:1px solid rgba(255,255,255,0.1);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  cursor:pointer;
 }
 
-.cell.valid::after {
-  content: '';
-  width: 30%;
-  height: 30%;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.4);
+.cell.valid::after{
+  content:'';
+  width:30%;
+  height:30%;
+  border-radius:50%;
+  background:rgba(255,255,255,0.4);
 }
 
-/* ======================
-   DISCS
-====================== */
-
+/* Discs */
 .disc {
-  width: 80%;
-  height: 80%;
-  border-radius: 50%;
-  transition: transform .3s;
+  width:80%;
+  height:80%;
+  border-radius:50%;
 }
 
 .black {
-  background: radial-gradient(circle at 30% 30%, #444, #000);
+  background:black;
 }
 
 .white {
-  background: radial-gradient(circle at 30% 30%, #fff, #cbd5e1);
+  background:white;
 }
 
-/* ======================
-   END SCREEN
-====================== */
+/* Modal */
+.modal {
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.7);
+  display:none;
+  justify-content:center;
+  align-items:center;
+}
 
-.end-screen {
-  text-align: center;
+.modal.show {
+  display:flex;
+}
+
+.modal-content {
+  background:#020617;
+  padding:20px;
+  border-radius:10px;
+  text-align:center;
+}
+
+body.light .modal-content {
+  background:white;
+}
+
+/* Footer */
+.footer {
+  margin-top:20px;
+  font-size:14px;
+}
+
+.socials {
+  display:flex;
+  gap:10px;
+  justify-content:center;
+  flex-wrap:wrap;
+}
+
+.socials a {
+  color:#60a5fa;
+  text-decoration:none;
 }
