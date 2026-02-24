@@ -1,215 +1,143 @@
-/* ======================
-   GLOBAL STYLES
-====================== */
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-* {
-  box-sizing: border-box;
-  font-family: 'Inter', sans-serif;
-}
+  <title>Othello / Reversi</title>
 
-body,
-.app,
-.board,
-.cell,
-button,
-select {
-  caret-color: transparent;
-  user-select: none;
-}
+  <!-- Favicon -->
+  <link rel="icon"
+    href="="https://i.postimg.cc/jjzp8XPD/Chat-GPT-Image-Feb-24-2026-08-37-43-PM.png">
 
-.cell:focus,
-button:focus,
-select:focus {
-  outline: none;
-}
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
-body {
-  margin: 0;
-  background: linear-gradient(135deg, #1e293b, #020617);
-  color: #f8fafc;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-.app {
-  width: 100%;
-  max-width: 900px;
-  background: #020617;
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-}
+  <!-- Main CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
 
-h1,h2,h3 {
-  margin: 0 0 16px;
-  text-align: center;
-}
+<body>
 
-button {
-  cursor: pointer;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 16px;
-  background: #2563eb;
-  color: white;
-  font-weight: 600;
-  transition: all .2s;
-}
+<div class="app">
 
-button:hover {
-  background: #1d4ed8;
-}
+  <!-- ================= START MENU ================= -->
+  <div id="menu" class="screen menu active">
 
-button.secondary {
-  background: #334155;
-}
+    <h1>Othello / Reversi</h1>
 
-button.secondary:hover {
-  background: #475569;
-}
+    <div class="controls">
 
-select {
-  padding: 8px;
-  border-radius: 6px;
-  background: #020617;
-  color: white;
-  border: 1px solid #334155;
-}
+      <select id="modeSelect">
+        <option value="pvp">Player vs Player</option>
+        <option value="ai">Player vs Computer</option>
+      </select>
 
-/* ======================
-   SCREENS
-====================== */
+      <select id="difficultySelect">
+        <option value="easy">Easy</option>
+        <option value="medium">Medium</option>
+        <option value="hard">Hard</option>
+      </select>
 
-.screen {
-  display: none;
-}
+      <button id="startBtn">Start Game</button>
 
-.screen.active {
-  display: block;
-}
+    </div>
 
-.menu {
-  text-align: center;
-}
 
-.menu .controls {
-  display: grid;
-  gap: 16px;
-  max-width: 300px;
-  margin: auto;
-}
+    <!-- Social Media Icons -->
+    <div class="social-footer">
 
-/* ======================
-   GAME UI
-====================== */
+      <a href="https://facebook.com/gurleenrajput.in" target="_blank" title="Facebook">
+        <i class="fab fa-facebook"></i>
+      </a>
 
-.game-ui {
-  display: grid;
-  grid-template-columns: 1fr 300px;
-  gap: 24px;
-}
+      <a href="https://instagram.com/gurleen_rajput_official" target="_blank" title="Instagram">
+        <i class="fab fa-instagram"></i>
+      </a>
 
-@media(max-width:768px){
-  .game-ui{
-    grid-template-columns:1fr;
-  }
-}
+      <a href="https://x.com/gurleenrajput" target="_blank" title="X (Twitter)">
+        <i class="fab fa-x-twitter"></i>
+      </a>
 
-.sidebar {
-  border: 1px solid #1e293b;
-  border-radius: 12px;
-  padding: 16px;
-}
+      <a href="https://github.com/gurleenrajput" target="_blank" title="GitHub">
+        <i class="fab fa-github"></i>
+      </a>
 
-.info {
-  margin-bottom: 12px;
-  padding: 8px;
-  border-radius: 6px;
-  border: 1px solid #1e293b;
-}
+      <a href="https://buymeacoffee.com/gurleenrajput" target="_blank" title="Buy Me Coffee">
+        <i class="fas fa-mug-hot"></i>
+      </a>
 
-/* ======================
-   BOARD
-====================== */
+    </div>
 
-.board {
-  aspect-ratio: 1;
-  display: grid;
-  grid-template-columns: repeat(8,1fr);
-  grid-template-rows: repeat(8,1fr);
-  background: #065f46;
-  border-radius: 12px;
-  overflow: hidden;
-  border: 4px solid #064e3b;
-}
 
-.cell {
-  border: 1px solid rgba(255,255,255,0.1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
+    <!-- Copyright -->
+    <p class="copyright">
+      © 2026 Gurleenrajput
+    </p>
 
-.cell.valid::after {
-  content: '';
-  width: 30%;
-  height: 30%;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.4);
-}
+  </div>
+  <!-- ================= END START MENU ================= -->
 
-/* ======================
-   DISCS
-====================== */
 
-.disc {
-  width: 80%;
-  height: 80%;
-  border-radius: 50%;
-  transition: transform .3s;
-}
+  <!-- ================= GAME SCREEN ================= -->
+  <div id="game" class="screen">
 
-.black {
-  background: radial-gradient(circle at 30% 30%, #444, #000);
-}
+    <h2>Othello</h2>
 
-.white {
-  background: radial-gradient(circle at 30% 30%, #fff, #cbd5e1);
-}
+    <div class="game-ui">
 
-/* ======================
-   END SCREEN
-====================== */
+      <div class="board" id="board"></div>
 
-.end-screen {
-  text-align: center;
-}
-/* Social Footer */
+      <div class="sidebar">
 
-.social-footer {
-  margin-top: 20px;
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-}
+        <div class="info">
+          <strong>Turn:</strong>
+          <span id="turnText"></span>
+        </div>
 
-.social-footer a {
-  font-size: 22px;
-  color: #60a5fa;
-  transition: 0.3s;
-}
+        <div class="info">
+          ⚫ Black: <span id="blackScore">2</span><br>
+          ⚪ White: <span id="whiteScore">2</span>
+        </div>
 
-.social-footer a:hover {
-  color: #93c5fd;
-  transform: scale(1.1);
-}
+        <div class="info">
+          <button id="restartBtn" class="secondary">Restart</button>
+        </div>
 
-.copyright {
-  margin-top: 8px;
-  font-size: 13px;
-  text-align: center;
-  color: #cbd5e1;
-}
+        <div class="info">
+          <button id="backBtn" class="secondary">Main Menu</button>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <!-- ================= END GAME SCREEN ================= -->
+
+
+  <!-- ================= END SCREEN ================= -->
+  <div id="end" class="screen end-screen">
+
+    <h2>Game Over</h2>
+
+    <h3 id="winnerText"></h3>
+    <p id="finalScore"></p>
+
+    <button id="newGameBtn">New Game</button>
+
+  </div>
+  <!-- ================= END END SCREEN ================= -->
+
+</div>
+
+
+<!-- Main JavaScript -->
+<script src="script.js"></script>
+
+</body>
+</html>
