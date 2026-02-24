@@ -3,26 +3,34 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>Othello / Reversi</title>
 
   <!-- Favicon -->
-<link rel="icon" type="image/png" href="https://i.postimg.cc/jjzp8XPD/Chat-GPT-Image-Feb-24-2026-08-37-43-PM.png">
+  <link rel="icon" type="image/png"
+    href="https://i.postimg.cc/jjzp8XPD/Chat-GPT-Image-Feb-24-2026-08-37-43-PM.png">
 
-  <!-- Google Font -->
+  <!-- Font -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
-  <!-- Main CSS -->
+  <!-- CSS -->
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
+
+<body class="dark">
 
 <div class="app">
 
-  <!-- START MENU -->
+  <!-- MENU -->
   <div id="menu" class="screen menu active">
+
     <h1>Othello / Reversi</h1>
 
+    <!-- Theme -->
+    <button id="themeToggle" class="theme-btn">🌙 Dark Mode</button>
+
     <div class="controls">
+
       <select id="modeSelect">
         <option value="pvp">Player vs Player</option>
         <option value="ai">Player vs Computer</option>
@@ -35,10 +43,51 @@
       </select>
 
       <button id="startBtn">Start Game</button>
+
+      <button id="howToPlayBtn" class="secondary">
+        How To Play
+      </button>
+
     </div>
+
+    <!-- How To Play Modal -->
+    <div id="howToPlayModal" class="modal">
+      <div class="modal-content">
+
+        <h3>How To Play</h3>
+
+        <p>1. Black plays first</p>
+        <p>2. Trap opponent discs</p>
+        <p>3. Trapped discs flip</p>
+        <p>4. Skip if no moves</p>
+        <p>5. More discs wins</p>
+
+        <button id="closeHowToPlay" class="secondary">
+          Close
+        </button>
+
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+
+      <div class="socials">
+        <a href="https://facebook.com/gurleenrajput.in" target="_blank">Facebook</a>
+        <a href="https://instagram.com/gurleen_rajput_official" target="_blank">Instagram</a>
+        <a href="https://x.com/gurleenrajput" target="_blank">X</a>
+        <a href="https://github.com/gurleenrajput" target="_blank">GitHub</a>
+        <a href="https://buymeacoffee.com/gurleenrajput" target="_blank">Coffee ☕</a>
+      </div>
+
+      <p>©️ 2026 Gurleenrajput</p>
+
+    </div>
+
   </div>
 
-  <!-- GAME SCREEN -->
+
+  <!-- GAME -->
   <div id="game" class="screen">
 
     <h2>Othello</h2>
@@ -50,42 +99,44 @@
       <div class="sidebar">
 
         <div class="info">
-          <strong>Turn:</strong>
-          <span id="turnText"></span>
+          Turn: <span id="turnText"></span>
         </div>
 
         <div class="info">
-          ⚫ Black: <span id="blackScore">2</span><br>
-          ⚪ White: <span id="whiteScore">2</span>
+          ⚫ <span id="blackScore">2</span><br>
+          ⚪ <span id="whiteScore">2</span>
         </div>
 
-        <div class="info">
-          <button id="restartBtn" class="secondary">Restart</button>
-        </div>
+        <button id="restartBtn" class="secondary">
+          Restart
+        </button>
 
-        <div class="info">
-          <button id="backBtn" class="secondary">Main Menu</button>
-        </div>
+        <button id="backBtn" class="secondary">
+          Menu
+        </button>
 
       </div>
 
     </div>
+
   </div>
 
-  <!-- END SCREEN -->
+
+  <!-- END -->
   <div id="end" class="screen end-screen">
+
     <h2>Game Over</h2>
 
     <h3 id="winnerText"></h3>
     <p id="finalScore"></p>
 
     <button id="newGameBtn">New Game</button>
+
   </div>
 
 </div>
 
-<!-- Main JavaScript -->
-<script src="script.js"></script>
 
+<script src="script.js"></script>
 </body>
 </html>
