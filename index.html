@@ -1,92 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Othello / Reversi</title>
 
-<title>Othello</title>
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
-<link rel="icon"
-href="https://i.postimg.cc/jjzp8XPD/Chat-GPT-Image-Feb-24-2026-08-37-43-PM.png">
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-<link rel="stylesheet" href="style.css">
+  <!-- Main CSS -->
+  <link rel="stylesheet" href="style.css">
 </head>
-
-<body class="dark">
+<body>
 
 <div class="app">
 
-<!-- MENU -->
-<div id="menu" class="screen active">
+  <!-- START MENU -->
+  <div id="menu" class="screen menu active">
+    <h1>Othello / Reversi</h1>
 
-<h1>Othello</h1>
+    <div class="controls">
+      <select id="modeSelect">
+        <option value="pvp">Player vs Player</option>
+        <option value="ai">Player vs Computer</option>
+      </select>
 
-<button id="themeBtn">🌙 Dark</button>
+      <select id="difficultySelect">
+        <option value="easy">Easy</option>
+        <option value="medium">Medium</option>
+        <option value="hard">Hard</option>
+      </select>
 
-<div class="controls">
+      <button id="startBtn">Start Game</button>
+    </div>
+  </div>
 
-<button id="startBtn">Start Game</button>
-<button id="howBtn">How To Play</button>
+  <!-- GAME SCREEN -->
+  <div id="game" class="screen">
+
+    <h2>Othello</h2>
+
+    <div class="game-ui">
+
+      <div class="board" id="board"></div>
+
+      <div class="sidebar">
+
+        <div class="info">
+          <strong>Turn:</strong>
+          <span id="turnText"></span>
+        </div>
+
+        <div class="info">
+          ⚫ Black: <span id="blackScore">2</span><br>
+          ⚪ White: <span id="whiteScore">2</span>
+        </div>
+
+        <div class="info">
+          <button id="restartBtn" class="secondary">Restart</button>
+        </div>
+
+        <div class="info">
+          <button id="backBtn" class="secondary">Main Menu</button>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- END SCREEN -->
+  <div id="end" class="screen end-screen">
+    <h2>Game Over</h2>
+
+    <h3 id="winnerText"></h3>
+    <p id="finalScore"></p>
+
+    <button id="newGameBtn">New Game</button>
+  </div>
 
 </div>
 
-<!-- Modal -->
-<div id="modal">
-
-<div class="box">
-
-<h3>How To Play</h3>
-
-<p>Black starts first</p>
-<p>Trap opponent discs</p>
-<p>More discs wins</p>
-
-<button id="closeBtn">Close</button>
-
-</div>
-
-</div>
-
-<!-- Footer -->
-<div class="footer">
-
-<div class="links">
-
-<a href="https://facebook.com/gurleenrajput.in"><i class="fab fa-facebook"></i></a>
-<a href="https://instagram.com/gurleen_rajput_official"><i class="fab fa-instagram"></i></a>
-<a href="https://x.com/gurleenrajput"><i class="fab fa-x-twitter"></i></a>
-<a href="https://github.com/gurleenrajput"><i class="fab fa-github"></i></a>
-<a href="https://buymeacoffee.com/gurleenrajput"><i class="fas fa-mug-hot"></i></a>
-
-</div>
-
-<p>© 2026 Gurleenrajput</p>
-
-</div>
-
-</div>
-
-
-<!-- GAME -->
-<div id="game" class="screen">
-
-<h2>Game</h2>
-
-<div id="board"></div>
-
-<p>Turn: <span id="turn"></span></p>
-
-<button id="backBtn">Menu</button>
-
-</div>
-
-</div>
-
+<!-- Main JavaScript -->
 <script src="script.js"></script>
+
 </body>
 </html>
