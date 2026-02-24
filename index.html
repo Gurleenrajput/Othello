@@ -1,141 +1,146 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Othello / Reversi</title>
+<title>Othello / Reversi</title>
 
-  <!-- Favicon -->
-  <link rel="icon" type="image/png"
-    href="https://i.postimg.cc/jjzp8XPD/Chat-GPT-Image-Feb-24-2026-08-37-43-PM.png">
+<!-- Favicon -->
+<link rel="icon"
+href="https://i.postimg.cc/jjzp8XPD/Chat-GPT-Image-Feb-24-2026-08-37-43-PM.png">
 
-  <!-- Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<!-- Font -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="style.css">
+<!-- Icons -->
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body class="dark">
 
 <div class="app">
 
-  <!-- MENU -->
-  <div id="menu" class="screen menu active">
+<!-- ========== MENU ========== -->
+<div id="menu" class="screen active menu">
 
-    <h1>Othello / Reversi</h1>
+<h1>Othello / Reversi</h1>
 
-    <!-- Theme -->
-    <button id="themeToggle" class="theme-btn">🌙 Dark Mode</button>
+<button id="themeBtn" class="theme-btn">🌙 Dark</button>
 
-    <div class="controls">
+<div class="controls">
 
-      <select id="modeSelect">
-        <option value="pvp">Player vs Player</option>
-        <option value="ai">Player vs Computer</option>
-      </select>
+<select id="modeSelect">
+<option value="pvp">Player vs Player</option>
+<option value="ai">Player vs AI</option>
+</select>
 
-      <select id="difficultySelect">
-        <option value="easy">Easy</option>
-        <option value="medium">Medium</option>
-        <option value="hard">Hard</option>
-      </select>
+<select id="difficultySelect">
+<option value="easy">Easy</option>
+<option value="medium">Medium</option>
+<option value="hard">Hard</option>
+</select>
 
-      <button id="startBtn">Start Game</button>
+<button id="startBtn">Start Game</button>
 
-      <button id="howToPlayBtn" class="secondary">
-        How To Play
-      </button>
-
-    </div>
-
-    <!-- How To Play Modal -->
-    <div id="howToPlayModal" class="modal">
-      <div class="modal-content">
-
-        <h3>How To Play</h3>
-
-        <p>1. Black plays first</p>
-        <p>2. Trap opponent discs</p>
-        <p>3. Trapped discs flip</p>
-        <p>4. Skip if no moves</p>
-        <p>5. More discs wins</p>
-
-        <button id="closeHowToPlay" class="secondary">
-          Close
-        </button>
-
-      </div>
-    </div>
-
-    <!-- Footer -->
-    <div class="footer">
-
-      <div class="socials">
-        <a href="https://facebook.com/gurleenrajput.in" target="_blank">Facebook</a>
-        <a href="https://instagram.com/gurleen_rajput_official" target="_blank">Instagram</a>
-        <a href="https://x.com/gurleenrajput" target="_blank">X</a>
-        <a href="https://github.com/gurleenrajput" target="_blank">GitHub</a>
-        <a href="https://buymeacoffee.com/gurleenrajput" target="_blank">Coffee ☕</a>
-      </div>
-
-      <p>©️ 2026 Gurleenrajput</p>
-
-    </div>
-
-  </div>
-
-
-  <!-- GAME -->
-  <div id="game" class="screen">
-
-    <h2>Othello</h2>
-
-    <div class="game-ui">
-
-      <div class="board" id="board"></div>
-
-      <div class="sidebar">
-
-        <div class="info">
-          Turn: <span id="turnText"></span>
-        </div>
-
-        <div class="info">
-          ⚫ <span id="blackScore">2</span><br>
-          ⚪ <span id="whiteScore">2</span>
-        </div>
-
-        <button id="restartBtn" class="secondary">
-          Restart
-        </button>
-
-        <button id="backBtn" class="secondary">
-          Menu
-        </button>
-
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <!-- END -->
-  <div id="end" class="screen end-screen">
-
-    <h2>Game Over</h2>
-
-    <h3 id="winnerText"></h3>
-    <p id="finalScore"></p>
-
-    <button id="newGameBtn">New Game</button>
-
-  </div>
+<button id="howBtn" class="secondary">How To Play</button>
 
 </div>
 
+<!-- HOW TO PLAY -->
+<div id="modal" class="modal">
+
+<div class="modal-box">
+
+<h3>How To Play</h3>
+
+<p>⚫ Black starts</p>
+<p>🔁 Flip opponent discs</p>
+<p>⏭ Skip if no move</p>
+<p>🏆 Highest score wins</p>
+
+<button id="closeBtn" class="secondary">Close</button>
+
+</div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+
+<div class="links">
+
+<a href="https://facebook.com/gurleenrajput.in" target="_blank">
+<i class="fab fa-facebook"></i>
+</a>
+
+<a href="https://instagram.com/gurleen_rajput_official" target="_blank">
+<i class="fab fa-instagram"></i>
+</a>
+
+<a href="https://x.com/gurleenrajput" target="_blank">
+<i class="fab fa-x-twitter"></i>
+</a>
+
+<a href="https://github.com/gurleenrajput" target="_blank">
+<i class="fab fa-github"></i>
+</a>
+
+<a href="https://buymeacoffee.com/gurleenrajput" target="_blank">
+<i class="fas fa-mug-hot"></i>
+</a>
+
+</div>
+
+<p>© 2026 Gurleenrajput</p>
+
+</div>
+
+</div>
+
+
+<!-- ========== GAME ========== -->
+<div id="game" class="screen">
+
+<h2>Othello</h2>
+
+<div class="layout">
+
+<div id="board" class="board"></div>
+
+<div class="side">
+
+<p>Turn: <span id="turn"></span></p>
+
+<p>⚫ <span id="black">2</span></p>
+<p>⚪ <span id="white">2</span></p>
+
+<button id="restart" class="secondary">Restart</button>
+<button id="back" class="secondary">Menu</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- ========== END ========== -->
+<div id="end" class="screen">
+
+<h2>Game Over</h2>
+
+<h3 id="winner"></h3>
+<p id="score"></p>
+
+<button id="new">New Game</button>
+
+</div>
+
+</div>
 
 <script src="script.js"></script>
 </body>
