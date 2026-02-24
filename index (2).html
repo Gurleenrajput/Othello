@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Othello / Reversi</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Main CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app">
+
+  <!-- START MENU -->
+  <div id="menu" class="screen menu active">
+    <h1>Othello / Reversi</h1>
+
+    <div class="controls">
+      <select id="modeSelect">
+        <option value="pvp">Player vs Player</option>
+        <option value="ai">Player vs Computer</option>
+      </select>
+
+      <select id="difficultySelect">
+        <option value="easy">Easy</option>
+        <option value="medium">Medium</option>
+        <option value="hard">Hard</option>
+      </select>
+
+      <button id="startBtn">Start Game</button>
+    </div>
+  </div>
+
+  <!-- GAME SCREEN -->
+  <div id="game" class="screen">
+
+    <h2>Othello</h2>
+
+    <div class="game-ui">
+
+      <div class="board" id="board"></div>
+
+      <div class="sidebar">
+
+        <div class="info">
+          <strong>Turn:</strong>
+          <span id="turnText"></span>
+        </div>
+
+        <div class="info">
+          ⚫ Black: <span id="blackScore">2</span><br>
+          ⚪ White: <span id="whiteScore">2</span>
+        </div>
+
+        <div class="info">
+          <button id="restartBtn" class="secondary">Restart</button>
+        </div>
+
+        <div class="info">
+          <button id="backBtn" class="secondary">Main Menu</button>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- END SCREEN -->
+  <div id="end" class="screen end-screen">
+    <h2>Game Over</h2>
+
+    <h3 id="winnerText"></h3>
+    <p id="finalScore"></p>
+
+    <button id="newGameBtn">New Game</button>
+  </div>
+
+</div>
+
+<!-- Main JavaScript -->
+<script src="script.js"></script>
+
+</body>
+</html>
