@@ -1,277 +1,248 @@
-/* ======================
-   GAME CONSTANTS
-====================== */
-
 const SIZE = 8;
 const EMPTY = 0;
 const BLACK = 1;
 const WHITE = -1;
 
-const DIRECTIONS = [
+const DIR = [
   [1,0],[-1,0],[0,1],[0,-1],
   [1,1],[1,-1],[-1,1],[-1,-1]
 ];
 
-/* ======================
-   STATE
-====================== */
-
 let board = [];
-let currentPlayer = BLACK;
-let mode = 'pvp';
-let difficulty = 'easy';
+let current = BLACK;
 let gameOver = false;
 
-/* ======================
-   DOM
-====================== */
+/* DOM */
+const menu = document.getElementById("menu");
+const game = document.getElementById("game");
+const end = document.getElementById("end");
 
-const menuScreen = document.getElementById('menu');
-const gameScreen = document.getElementById('game');
-const endScreen = document.getElementById('end');
+const boardEl = document.getElementById("board");
 
-const boardEl = document.getElementById('board');
-const turnText = document.getElementById('turnText');
-const blackScoreEl = document.getElementById('blackScore');
-const whiteScoreEl = document.getElementById('whiteScore');
+const turnText = document.getElementById("turnText");
+const blackScore = document.getElementById("blackScore");
+const whiteScore = document.getElementById("whiteScore");
 
-const winnerText = document.getElementById('winnerText');
-const finalScore = document.getElementById('finalScore');
+const winnerText = document.getElementById("winnerText");
+const finalScore = document.getElementById("finalScore");
 
-/* ======================
-   UI HANDLERS
-====================== */
-
-startBtn.onclick = () => {
-  mode = modeSelect.value;
-  difficulty = difficultySelect.value;
-  startGame();
-};
-
+/* Buttons */
+startBtn.onclick = startGame;
 restartBtn.onclick = startGame;
-backBtn.onclick = () => showScreen(menuScreen);
-newGameBtn.onclick = () => showScreen(menuScreen);
+backBtn.onclick = ()=>show(menu);
+newGameBtn.onclick = ()=>show(menu);
 
-modeSelect.onchange = () => {
-  difficultySelect.style.display =
-    modeSelect.value === 'ai' ? 'block' : 'none';
+/* How To Play */
+howToPlayBtn.onclick = ()=>{
+  howToPlayModal.classList.add("show");
 };
 
-/* ======================
-   SCREEN CONTROL
-====================== */
+closeHowToPlay.onclick = ()=>{
+  howToPlayModal.classList.remove("show");
+};
 
-function showScreen(screen) {
-  [menuScreen, gameScreen, endScreen]
-    .forEach(s => s.classList.remove('active'));
-  screen.classList.add('active');
+/* Theme */
+const themeBtn = document.getElementById("themeToggle");
+
+if(localStorage.theme==="light"){
+  document.body.className="light";
+  themeBtn.textContent="🌞 Light Mode";
 }
 
-/* ======================
-   INIT
-====================== */
+themeBtn.onclick=()=>{
 
-function startGame() {
+  if(document.body.classList.contains("light")){
+    document.body.className="dark";
+    themeBtn.textContent="🌙 Dark Mode";
+    localStorage.theme="dark";
+  }else{
+    document.body.className="light";
+    themeBtn.textContent="🌞 Light Mode";
+    localStorage.theme="light";
+  }
+};
+
+/* Screens */
+function show(s){
+  [menu,game,end].forEach(x=>x.classList.remove("active"));
+  s.classList.add("active");
+}
+
+/* Init */
+function startGame(){
 
   initBoard();
-  renderBoard();
-  updateUI();
+  current = BLACK;
+  gameOver=false;
 
-  gameOver = false;
-  currentPlayer = BLACK;
+  draw();
+  update();
 
-  showScreen(gameScreen);
+  show(game);
 }
 
-function initBoard() {
-  board = Array.from({length: SIZE},
-    () => Array(SIZE).fill(EMPTY));
+function initBoard(){
 
-  board[3][3] = WHITE;
-  board[3][4] = BLACK;
-  board[4][3] = BLACK;
-  board[4][4] = WHITE;
+  board = Array.from({length:8},
+    ()=>Array(8).fill(0));
+
+  board[3][3]=WHITE;
+  board[3][4]=BLACK;
+  board[4][3]=BLACK;
+  board[4][4]=WHITE;
 }
 
-/* ======================
-   GAME LOGIC
-====================== */
+/* Logic */
+function inBounds(r,c){
+  return r>=0&&r<8&&c>=0&&c<8;
+}
 
-function isValidMove(r,c,player,brd=board) {
+function valid(r,c,p){
 
-  if (brd[r][c] !== EMPTY) return false;
+  if(board[r][c]!==0) return false;
 
-  for (let [dx,dy] of DIRECTIONS) {
+  for(let [dx,dy] of DIR){
 
-    let x = r + dx;
-    let y = c + dy;
-    let foundOpponent = false;
+    let x=r+dx,y=c+dy;
+    let found=false;
 
-    while (inBounds(x,y) && brd[x][y] === -player) {
-      foundOpponent = true;
-      x += dx;
-      y += dy;
+    while(inBounds(x,y)&&board[x][y]===-p){
+      found=true;
+      x+=dx;y+=dy;
     }
 
-    if (foundOpponent && inBounds(x,y)
-      && brd[x][y] === player) {
+    if(found&&inBounds(x,y)&&board[x][y]===p)
       return true;
-    }
   }
 
   return false;
 }
 
-function getValidMoves(player, brd=board) {
-  const moves = [];
+function moves(p){
 
-  for (let r=0;r<SIZE;r++) {
-    for (let c=0;c<SIZE;c++) {
-      if (isValidMove(r,c,player,brd)) {
-        moves.push([r,c]);
-      }
-    }
-  }
+  let m=[];
 
-  return moves;
+  for(let r=0;r<8;r++)
+    for(let c=0;c<8;c++)
+      if(valid(r,c,p)) m.push([r,c]);
+
+  return m;
 }
 
-function makeMove(r,c,player) {
+function place(r,c,p){
 
-  board[r][c] = player;
+  board[r][c]=p;
 
-  for (let [dx,dy] of DIRECTIONS) {
+  for(let [dx,dy] of DIR){
 
-    let x = r + dx;
-    let y = c + dy;
-    let line = [];
+    let x=r+dx,y=c+dy;
+    let line=[];
 
-    while (inBounds(x,y) && board[x][y] === -player) {
+    while(inBounds(x,y)&&board[x][y]===-p){
       line.push([x,y]);
-      x += dx;
-      y += dy;
+      x+=dx;y+=dy;
     }
 
-    if (line.length && inBounds(x,y)
-      && board[x][y] === player) {
-
-      for (let [fx,fy] of line) {
-        board[fx][fy] = player;
-      }
+    if(line.length&&inBounds(x,y)&&board[x][y]===p){
+      for(let [a,b] of line)
+        board[a][b]=p;
     }
   }
 }
 
-function inBounds(r,c) {
-  return r>=0 && r<SIZE && c>=0 && c<SIZE;
-}
+function switchTurn(){
 
-function switchPlayer() {
+  current*=-1;
 
-  currentPlayer *= -1;
+  if(!moves(current).length){
+    current*=-1;
 
-  if (getValidMoves(currentPlayer).length === 0) {
-    currentPlayer *= -1;
-
-    if (getValidMoves(currentPlayer).length === 0) {
+    if(!moves(current).length){
       endGame();
       return;
     }
   }
 
-  updateUI();
+  update();
 }
 
-function countScore() {
+/* Render */
+function draw(){
 
-  let black=0, white=0;
+  boardEl.innerHTML=\"\";
 
-  board.flat().forEach(v => {
-    if (v===BLACK) black++;
-    if (v===WHITE) white++;
-  });
+  const v=moves(current);
 
-  return {black,white};
-}
+  for(let r=0;r<8;r++){
+    for(let c=0;c<8;c++){
 
-/* ======================
-   RENDERING
-====================== */
+      const cell=document.createElement(\"div\");
+      cell.className=\"cell\";
 
-function renderBoard() {
+      if(v.some(m=>m[0]==r&&m[1]==c))
+        cell.classList.add(\"valid\");
 
-  boardEl.innerHTML = '';
+      if(board[r][c]){
 
-  const validMoves = getValidMoves(currentPlayer);
-
-  for (let r=0;r<SIZE;r++) {
-    for (let c=0;c<SIZE;c++) {
-
-      const cell = document.createElement('div');
-      cell.className = 'cell';
-
-      if (validMoves.some(m=>m[0]===r&&m[1]===c)) {
-        cell.classList.add('valid');
+        const d=document.createElement(\"div\");
+        d.className=\"disc \"+(board[r][c]==1?\"black\":\"white\");
+        cell.appendChild(d);
       }
 
-      const v = board[r][c];
-
-      if (v !== EMPTY) {
-        const disc = document.createElement('div');
-        disc.className = 'disc ' + (v===BLACK?'black':'white');
-        cell.appendChild(disc);
-      }
-
-      cell.onclick = () => playMove(r,c);
+      cell.onclick=()=>play(r,c);
 
       boardEl.appendChild(cell);
     }
   }
 }
 
-function playMove(r,c) {
+function play(r,c){
 
-  if (gameOver) return;
+  if(gameOver) return;
+  if(!valid(r,c,current)) return;
 
-  if (!isValidMove(r,c,currentPlayer)) return;
+  place(r,c,current);
 
-  makeMove(r,c,currentPlayer);
-
-  renderBoard();
-  updateUI();
-
-  switchPlayer();
+  draw();
+  update();
+  switchTurn();
 }
 
-function updateUI() {
+function update(){
 
-  const {black,white} = countScore();
+  let b=0,w=0;
 
-  blackScoreEl.textContent = black;
-  whiteScoreEl.textContent = white;
+  board.flat().forEach(v=>{
+    if(v==1)b++;
+    if(v==-1)w++;
+  });
+
+  blackScore.textContent=b;
+  whiteScore.textContent=w;
 
   turnText.textContent =
-    currentPlayer===BLACK ? 'Black ⚫' : 'White ⚪';
+    current==1?\"Black ⚫\":\"White ⚪\";
 
-  renderBoard();
+  draw();
 }
 
-/* ======================
-   END GAME
-====================== */
+/* End */
+function endGame(){
 
-function endGame() {
+  gameOver=true;
 
-  gameOver = true;
+  let b=0,w=0;
 
-  const {black,white} = countScore();
+  board.flat().forEach(v=>{
+    if(v==1)b++;
+    if(v==-1)w++;
+  });
 
-  if (black > white) winnerText.textContent = 'Black Wins!';
-  else if (white > black) winnerText.textContent = 'White Wins!';
-  else winnerText.textContent = 'Draw!';
+  if(b>w) winnerText.textContent=\"Black Wins!\";
+  else if(w>b) winnerText.textContent=\"White Wins!\";
+  else winnerText.textContent=\"Draw!\";
 
-  finalScore.textContent =
-    `Black: ${black} | White: ${white}`;
+  finalScore.textContent=`Black: ${b} | White: ${w}`;
 
-  showScreen(endScreen);
+  show(end);
 }
