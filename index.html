@@ -4,16 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Othello / Reversi</title>
+<title>Othello</title>
 
-<!-- Favicon -->
 <link rel="icon"
 href="https://i.postimg.cc/jjzp8XPD/Chat-GPT-Image-Feb-24-2026-08-37-43-PM.png">
 
-<!-- Font -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
-<!-- Icons -->
 <link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
@@ -24,74 +21,47 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
 
 <div class="app">
 
-<!-- ========== MENU ========== -->
-<div id="menu" class="screen active menu">
+<!-- MENU -->
+<div id="menu" class="screen active">
 
-<h1>Othello / Reversi</h1>
+<h1>Othello</h1>
 
-<button id="themeBtn" class="theme-btn">🌙 Dark</button>
+<button id="themeBtn">🌙 Dark</button>
 
 <div class="controls">
 
-<select id="modeSelect">
-<option value="pvp">Player vs Player</option>
-<option value="ai">Player vs AI</option>
-</select>
-
-<select id="difficultySelect">
-<option value="easy">Easy</option>
-<option value="medium">Medium</option>
-<option value="hard">Hard</option>
-</select>
-
 <button id="startBtn">Start Game</button>
-
-<button id="howBtn" class="secondary">How To Play</button>
+<button id="howBtn">How To Play</button>
 
 </div>
 
-<!-- HOW TO PLAY -->
-<div id="modal" class="modal">
+<!-- Modal -->
+<div id="modal">
 
-<div class="modal-box">
+<div class="box">
 
 <h3>How To Play</h3>
 
-<p>⚫ Black starts</p>
-<p>🔁 Flip opponent discs</p>
-<p>⏭ Skip if no move</p>
-<p>🏆 Highest score wins</p>
+<p>Black starts first</p>
+<p>Trap opponent discs</p>
+<p>More discs wins</p>
 
-<button id="closeBtn" class="secondary">Close</button>
-
-</div>
+<button id="closeBtn">Close</button>
 
 </div>
 
-<!-- FOOTER -->
+</div>
+
+<!-- Footer -->
 <div class="footer">
 
 <div class="links">
 
-<a href="https://facebook.com/gurleenrajput.in" target="_blank">
-<i class="fab fa-facebook"></i>
-</a>
-
-<a href="https://instagram.com/gurleen_rajput_official" target="_blank">
-<i class="fab fa-instagram"></i>
-</a>
-
-<a href="https://x.com/gurleenrajput" target="_blank">
-<i class="fab fa-x-twitter"></i>
-</a>
-
-<a href="https://github.com/gurleenrajput" target="_blank">
-<i class="fab fa-github"></i>
-</a>
-
-<a href="https://buymeacoffee.com/gurleenrajput" target="_blank">
-<i class="fas fa-mug-hot"></i>
-</a>
+<a href="https://facebook.com/gurleenrajput.in"><i class="fab fa-facebook"></i></a>
+<a href="https://instagram.com/gurleen_rajput_official"><i class="fab fa-instagram"></i></a>
+<a href="https://x.com/gurleenrajput"><i class="fab fa-x-twitter"></i></a>
+<a href="https://github.com/gurleenrajput"><i class="fab fa-github"></i></a>
+<a href="https://buymeacoffee.com/gurleenrajput"><i class="fas fa-mug-hot"></i></a>
 
 </div>
 
@@ -102,41 +72,16 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
 </div>
 
 
-<!-- ========== GAME ========== -->
+<!-- GAME -->
 <div id="game" class="screen">
 
-<h2>Othello</h2>
+<h2>Game</h2>
 
-<div class="layout">
-
-<div id="board" class="board"></div>
-
-<div class="side">
+<div id="board"></div>
 
 <p>Turn: <span id="turn"></span></p>
 
-<p>⚫ <span id="black">2</span></p>
-<p>⚪ <span id="white">2</span></p>
-
-<button id="restart" class="secondary">Restart</button>
-<button id="back" class="secondary">Menu</button>
-
-</div>
-
-</div>
-
-</div>
-
-
-<!-- ========== END ========== -->
-<div id="end" class="screen">
-
-<h2>Game Over</h2>
-
-<h3 id="winner"></h3>
-<p id="score"></p>
-
-<button id="new">New Game</button>
+<button id="backBtn">Menu</button>
 
 </div>
 
